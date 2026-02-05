@@ -1,5 +1,5 @@
-mod parser_ipc356a;
-mod netlist;
+pub mod parser_ipc356a;
+pub mod netlist;
 
 #[cfg(test)]
 mod tests {

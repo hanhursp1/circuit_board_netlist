@@ -1,6 +1,4 @@
-use core::panic;
-
-// use crate::netlist::{Netlist, Units};
+// TODO: Remove all panics, implement a custom error type
 
 use std::{
 	collections::HashMap,
