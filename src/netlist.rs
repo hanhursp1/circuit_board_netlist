@@ -1,9 +1,11 @@
-use std::{collections::HashMap, fmt::Display};
+use std::fmt::Display;
+
+use serde::{Deserialize, Serialize};
 
 pub type Coordinates = (i32, i32);
 
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Netlist {
 	// A set of nets, a pairing of the name and coordinate set
 	pub nets: Vec<(Option<String>, Vec<Coordinates>)>
