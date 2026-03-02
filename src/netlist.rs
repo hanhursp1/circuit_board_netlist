@@ -1,4 +1,4 @@
-use std::fmt::Display;
+use std::{borrow::Cow, fmt::Display};
 
 use serde::{Deserialize, Serialize};
 
@@ -36,6 +36,27 @@ impl Netlist {
 		}
 		let n = if num_nets > 0 { &n[..num_nets] } else { &[] };
 		(num_nets, Self::new(n.to_vec()))
+	}
+
+		// Creates a clone of `self` starting from `from` and ending with the max number of allowed vertices
+	pub fn cow_slice(&self, from: usize, with_vertices: usize) -> (usize, Cow<Self>) {
+		let n = &self.nets[from..];
+		let (mut num_verts, mut num_nets) = (0, 0);
+		for net in n.iter() {
+			num_verts += net.1.len();
+			if num_verts >= with_vertices {
+				break;
+			}
+			num_nets += 1;
+		}
+		let n = if num_nets > 0 { &n[..num_nets] } else { &[] };
+		if n.len() == self.nets.len() {
+			// Number of vertices in `self` is less than limit, borrow `self``
+			(num_nets, Cow::Borrowed(self))
+		} else {
+			// Total number of vertices in `self` is greater than or equal to limit, create new netlist
+			(num_nets, Cow::Owned(Self::new(n.to_vec())))
+		}
 	}
 
 	pub fn sort_nets(&mut self) {
