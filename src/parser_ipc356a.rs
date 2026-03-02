@@ -1,9 +1,7 @@
 // TODO: Remove all panics, implement a custom error type
 
 use std::{
-	collections::HashMap,
-	ffi::{OsStr, OsString},
-	hash::Hash,
+	collections::HashMap
 };
 
 use crate::netlist::{Coordinates, Netlist};

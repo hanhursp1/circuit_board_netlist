@@ -1,5 +1,11 @@
-pub mod parser_ipc356a;
+mod parser_ipc356a;
 pub mod netlist;
+
+use crate::netlist::Netlist;
+
+pub fn parse_ipc356a(str: &String) -> Netlist {
+	parser_ipc356a::parse_netlist(str).into()
+}
 
 #[cfg(test)]
 mod tests {
@@ -7,9 +13,7 @@ mod tests {
 
 use super::*;
 
-	#[test]
-	fn it_works() {
-		const TEST_STR: &str = "P  JOB 
+const TEST_STR: &str = "P  JOB 
 P  CODE  UTF-8
 P  UNITS  CUST0
 P  TITLE  
@@ -34,13 +38,24 @@ P  VER   IPC-D-356A317GND              U30   -2    D0472PA00X 041600Y 015589X070
 317GND              RESET2-3    D0472PA00X 047614Y 007432X0787Y         S0
 317A_INC            RESET2-2    D0472PA00X 047614Y 005660X0787Y         S0
 317A_INC            RESET2-1    D0472PA00X 045055Y 005660X0787Y         S0";
-		
+
+	#[test]
+	fn it_works() {		
 		let net = parser_ipc356a::parse_netlist(&String::from(TEST_STR));
 		println!("Units: {:?}", net.units);
 		let net: Netlist = net.into();
 		println!("{}", net);
-		let x: Box<[i32]> = Box::new([1, 2, 3]);
-		println!("{:?}", x);
-		println!("{}", x.len());
+	}
+
+	#[test]
+	fn slice_test() {
+		let net = parse_ipc356a(&String::from(TEST_STR));
+		println!("{}", &net);
+		let new_net = net.cloned_slice(1, 5);
+		println!("{}", new_net.1);
+		println!("{}", new_net.0);
+		let new_net = net.cloned_slice(1 + new_net.0, 5);
+		println!("{}", new_net.1);
+		println!("{}", new_net.0);
 	}
 }
